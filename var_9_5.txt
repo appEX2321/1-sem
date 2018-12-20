@@ -1,0 +1,60 @@
+#include <iostream>
+using namespace std;
+
+struct TRAIN{
+    int train;
+    string time;
+    string destination;
+};
+
+int main(){
+    setlocale(LC_ALL, "rus");
+    int n=8;
+    int temp1;
+    string temp2, temp3;
+    TRAIN train[n];
+
+    for(int i=0; i<n; i++){
+        cout<<"Введите номер поезда: "; cin>>train[i].train;
+        cout<<"Введите пункт назначения: "; cin.get(); getline(cin, train[i].destination);
+        cout<<"Введите время отправления: "; getline(cin, train[i].time);
+        cout<<endl;
+    }
+
+    for(int i=1; i<n; i++){
+        if(train[i].train<train[i-1].train){
+            temp1=train[i].train;
+            temp2=train[i].time;
+            temp3=train[i].destination;
+            train[i].train=train[i-1].train;
+            train[i].time=train[i-1].time;
+            train[i].destination=train[i-1].destination;
+            train[i-1].train=temp1;
+            train[i-1].time=temp2;
+            train[i-1].destination=temp3;
+        }
+        cout<<"номер поезда: "<<train[i-1].train<<" "
+        <<"пункт назначения: "<<train[i-1].destination<<" "
+        <<"время отправления: "<<train[i-1].time;
+        cout<<endl;
+        if(i==n-1){
+            cout<<"номер поезда: "<<train[i].train<<" "
+            <<"пункт назначения: "<<train[i].destination<<" "
+            <<"время отправления: "<<train[i].time;
+            cout<<endl;
+        }
+    }
+    int num, counter=0;
+    cout<<"Введите номер поезда: "; cin>>num;
+    for(int i=0; i<n; i++){
+        if(train[i].train==num){
+            cout<<"номер поезда: "<<train[i].train<<" "
+            <<"пункт назначения: "<<train[i].destination<<" "
+            <<"время отправления: "<<train[i].time;
+            cout<<endl;
+            counter++;
+        }
+    }
+    if(counter==0) cout<<"Поездов с таким номером не найдено!";
+    return 0;
+}

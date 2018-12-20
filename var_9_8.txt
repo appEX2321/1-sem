@@ -1,0 +1,129 @@
+#include <iostream>
+#include <list>
+#include <string>
+
+class file
+{
+public:
+	file(const std::string& file_name, unsigned int file_size):deleted(false), name(file_name), size(file_size){};
+	file(unsigned int file_size):deleted(true), size(file_size){};
+	void delete_file(){
+		deleted=true;
+	}
+	unsigned int get_size() const{
+		return size;
+	}
+	bool is_deleted() const{
+		return deleted;
+	}
+	const std::string& get_name() const{
+		return name;
+	}
+private:
+	std::string name;
+	unsigned int size;
+	bool deleted;
+};
+
+class size_error{};
+
+class disc{
+public:
+	disc(unsigned int disc_size=360*1024):max_size(disc_size){};
+	void add_file(file f){
+		auto it=begin(file_list);
+		unsigned int curr_size=0;
+		while (it!=end(file_list))
+		{
+			if (it->is_deleted()&&it->get_size()>=f.get_size())
+			{
+				unsigned int dif_size=it->get_size()-f.get_size();
+				*it=f;
+				if (dif_size)
+				{
+					it++;
+					file_list.insert(it, file(dif_size));
+				}
+				return;
+			}
+			curr_size+=it->get_size();
+			it++;
+		}
+		if (curr_size+f.get_size()<=max_size)
+		{
+			file_list.push_back(f);
+		}
+		else
+		{
+			throw size_error();
+		}
+	}
+	void delete_file(const std::string& file_name){
+		for (auto& el:file_list)
+		{
+			if (el.get_name()==file_name)
+			{
+				el.delete_file();
+				return;
+			}
+		}
+	}
+	void disc_map(){
+		unsigned int curr_size=0;
+		std::cout<<"-----------------------------------------"<<std::endl;
+		std::cout<<"Total disc space: "<<max_size<<" byte"<<std::endl;
+		for (auto el:file_list)
+		{
+			curr_size+=el.get_size();
+			if (el.is_deleted())
+			{
+				std::cout<<"Free space: "<<el.get_size()<<" byte"<<std::endl;
+			}
+			else
+			{
+				std::cout<<"File: "<<el.get_name()<<" Size: "<<el.get_size()<<" byte"<<std::endl;
+			}
+		}
+		unsigned int dif_size=max_size-curr_size;
+		if (dif_size)
+		{
+			std::cout<<"Free space: "<<dif_size<<" byte"<<std::endl;
+		}
+		std::cout<<"-----------------------------------------"<<std::endl;
+	}
+private:
+	std::list<file> file_list;
+	unsigned int max_size;
+};
+
+int main() {
+try{
+		disc d;
+		d.disc_map();
+		file f1("file1.txt", 50);
+		d.add_file(f1);
+		d.disc_map();
+		file f2("file2.txt", 32*1024);
+		d.add_file(f2);
+		d.disc_map();
+		d.delete_file("file1.txt");
+		d.disc_map();
+		file f3("file3.txt", 70);
+		d.add_file(f3);
+		d.disc_map();
+		file f4("file4.txt", 18);
+		d.add_file(f4);
+		d.disc_map();
+		file f5("file5.txt", 360*1024);
+		d.add_file(f5);
+		d.disc_map();
+	}
+	catch(size_error){
+		std::cout<<"Error: File too large";
+	}
+	catch(...){
+		std::cout<<"Error";
+	}
+	system("pause");
+	return 0;
+}

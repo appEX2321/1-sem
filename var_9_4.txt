@@ -1,0 +1,67 @@
+#include <iostream>
+using namespace std;
+
+struct POINT{
+    int x;
+    int y;
+};
+
+struct TRIANGLE{
+    struct POINT1{
+    int x;
+    int y;
+    }point1;
+    struct POINT2{
+    int x;
+    int y;
+    }point2;
+    struct POINT3{
+    int x;
+    int y;
+    }point3;
+
+};
+
+int main(){
+    int n, tempx=1000, tempy=1000;
+    setlocale(LC_ALL, "rus");
+    cout<<"число n: ";
+    cin>>n;
+    POINT point[3*n];
+    TRIANGLE triangle[n];
+    cout<<"¬ведите координаты точек:"<<endl;
+    for(int i=0; i<3*n; i++){
+        cin>>point[i].x>>point[i].y;
+    }
+    for(int j=0; j<3*n; j++){
+            for(int i=1; i<3*n; i++){
+                if(point[i].x<point[i-1].x || point[i].y<point[i-1].y){
+                    tempx=point[i-1].x;
+                    tempy=point[i-1].y;
+                    point[i-1]=point[i];
+                    point[i-1]=point[i];
+                    point[i].x=tempx;
+                    point[i].y=tempy;
+                }
+            }
+    }
+    cout<<endl;
+    for(int i=0; i<3*n; i++){
+        cout<<point[i].x<<" "<<point[i].y<<endl;
+    }
+    cout<<endl;
+    int j=0;
+    for(int i=0; i<n; i++){
+        triangle[i].point1.x=point[j].x;
+        triangle[i].point1.y=point[j].y;
+        triangle[i].point2.x=point[j+1].x;
+        triangle[i].point2.y=point[j+1].y;
+        triangle[i].point3.x=point[j+2].x;
+        triangle[i].point3.y=point[j+2].y;
+        j+=3;
+
+       cout<<"("<<triangle[i].point1.x<<" "<<triangle[i].point1.y<<"; "<<triangle[i].point2.x<<" "<<triangle[i].point2.y<<"; "<<
+       triangle[i].point3.x<<" "<<triangle[i].point3.y<<")"<<endl;
+    }
+    return 0;
+}

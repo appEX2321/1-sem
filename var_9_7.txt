@@ -1,0 +1,49 @@
+#include <iostream>
+#include <windows.h>
+using namespace std;
+int main(){
+SetConsoleOutputCP(1251);
+char str[70];
+int i, kol=0,counter=1;
+FILE *f1;
+f1=fopen("file.dat","r");
+    if (f1==NULL) puts("error");
+    else{
+        while(!feof(f1)){
+            fgets(str,70,f1);
+            puts(str);
+        }
+     cout<<endl;
+    fclose(f1);
+    }
+f1=fopen("file.dat","r");
+    if(f1==NULL) puts("error");
+    else
+    while(!feof(f1)){
+        fgets(str,70,f1);
+        counter++;
+        for(i = 0; i < 70; i++){
+            if (str[i] == ',') kol++;
+            if (str[i] == '.') kol++;
+            if (str[i] == '"') kol++;
+            if (str[i] == '(') kol++;
+            if (str[i] == ')') kol++;
+            if (str[i] == '—') kol++;
+            if (str[i] == '!') kol++;
+            if (str[i] == '?') kol++;
+            if (str[i] == '/') kol++;
+            if (str[i] == '<') kol++;
+            if (str[i] == '>') kol++;
+            if (str[i] == ':') kol++;
+            if (str[i] == ';') kol++;
+            if (str[i] == '-') kol++;
+            if (str[i] == '»') kol++;
+            if (str[i] == '«') kol++;
+        }
+        cout<<"Количество символов в предложении "<<counter-1<<" = "<<kol<<endl<<endl;
+        kol=0;
+    }
+fclose(f1);
+system ("pause");
+return 0;
+}

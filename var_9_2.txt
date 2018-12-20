@@ -1,0 +1,32 @@
+#include <iostream>
+#include <ctime>
+#include <cmath>
+using namespace std;
+int main(){
+    srand( time( 0 ) );
+    int n, max=0, counter=0, sum=0, temp;
+    cin>>n;
+    int a[n];
+    for(int i=0; i<n; i++){
+        a[i]=-5 + rand() % 10;
+        if(abs(a[i])>max) max=abs(a[i]);
+        if(a[i]>0)counter++;
+        if(counter==1) sum+=a[i];
+
+    }
+    for(int i=0; i<n; i++){
+        for(int j=1; j<n; j++){
+            if(a[j-1]==0){
+                temp=a[j-1];
+                a[j-1]=a[j];
+                a[j]=temp;
+            }
+        }
+    }
+    for(int i=0; i<n; i++)
+    cout<<a[i]<<" ";
+
+    cout<<"\nmax = "<<max;
+    cout<<"\nsum = "<<sum;
+    return 0;
+}

@@ -1,0 +1,81 @@
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+struct scan_info{
+    char model[25]; // наименование модели
+    int price; // цена
+    double x_s1ze; // горизонтальный размер области сканировани€
+    double y__s1ze; // вертикальный размер области сканировани€
+    int optr; // оптическое разрешение
+    int grey; // число градаций серого
+};
+
+void skaner(struct scan_info* scan, long n, int &counter){
+    for(long i=0; i<n; i++){
+        cout<<"¬ведите им€ модели: "; cin.get(); cin.getline(scan[i].model, 25);
+        cout<<"¬ведите цену: "; cin>>scan[i].price; if(scan[i].price>200) counter++;
+        cout<<"¬ведите размеры сканировани€ X Y: "; cin>>scan[i].x_s1ze; cin>>scan[i].y__s1ze;
+        cout<<"¬ведите оптическое разрешение: "; cin>>scan[i].optr;
+        cout<<"¬ведите число градаций серого: "; cin>>scan[i].grey;
+        cout<<endl;
+    }
+    cout<<"все сканеры: "<<endl;
+    for(long i=0; i<n; i++){
+        cout<<scan[i].model<<" "<<
+        scan[i].price<<" "<<
+        scan[i].x_s1ze<<" "<<
+        scan[i].y__s1ze<<" "<<
+        scan[i].optr<<" "<<
+        scan[i].grey<<endl;
+    }
+    cout<<endl;
+}
+
+void file(struct scan_info* scan, long n, int &counter){
+    int cunt = counter;
+    ofstream file ("output.txt", ios::binary);
+    if (!file) {
+        cout << "ќшибка!";
+        exit(0);
+    }
+    else{
+        file.write((char*)&cunt, sizeof(cunt));
+        for(long i=0; i<n; i++){
+            if(scan[i].price>200){
+                file.write(reinterpret_cast<char*>(&scan[i]), sizeof(scan_info));
+                file.close();
+            }
+        }
+    }
+}
+
+void out(struct scan_info* scan, int counter){
+    ifstream in("output.txt", ios::binary);
+    in.read((char*)&counter, sizeof(counter));
+    cout<<counter<<endl;
+    for(long i=0; i<counter; i++){
+
+        in.read(reinterpret_cast<char*>(&scan[i]), sizeof(scan_info));
+        cout<<scan[i].model<<" ";
+        cout<<scan[i].price<<" ";
+        cout<<scan[i].x_s1ze<<" ";
+        cout<<scan[i].y__s1ze<<" ";
+        cout<<scan[i].optr<<" ";
+        cout<<scan[i].grey<<" ";
+        cout<<endl;
+    }
+   in.close();
+}
+
+int main(){
+    long n;
+    int counter=0;
+    setlocale(LC_ALL, "rus");
+    cout<<"¬ведите число сканеров: "; cin>>n;
+    scan_info *scan = new scan_info[n];
+    skaner(scan, n, counter);
+    file(scan, n, counter);
+    out(scan, counter);
+    return 0;
+}
